@@ -5,8 +5,10 @@
 
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
+Javascript
+
 ```javascript
-let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require(".") // Replace with require("edge-paths")
+let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require("edge-paths") // Replace with require("edge-paths")
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
@@ -26,16 +28,29 @@ console.log(getEdgePath())
 // C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 ```
 
+Typescript
+
+```typescript
+import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } from "edge-paths"
+
+console.log(getEdgeBetaPath())
+console.log(getEdgeCanaryPath())
+console.log(getEdgeDevPath())
+console.log(getEdgePath())
+```
+
 ## Installation
 
 [Use](https://docs.npmjs.com/cli/install) [npm](https://docs.npmjs.com/about-npm/).
 
 ```
+
 npm install edge-paths
 
 or
 
 yarn add edge-paths
+
 ```
 
 ## API
