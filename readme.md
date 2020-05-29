@@ -7,7 +7,7 @@ Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) i
 Javascript
 
 ```javascript
-let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require("edge-paths") // Replace with require("edge-paths")
+let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require("edge-paths")
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
