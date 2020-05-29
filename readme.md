@@ -1,7 +1,6 @@
 # Edge Paths
 
 [![npm version](https://img.shields.io/npm/v/edge-paths.svg)](https://www.npmjs.com/package/edge-paths)
-[![Build Status](https://travis-ci.com/shinnn/edge-paths.svg?branch=master)](https://travis-ci.com/shinnn/edge-paths)
 
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
