@@ -60,4 +60,4 @@ const edgePaths = require("edge-paths")
 
 ## License
 
-[ISC License](./LICENSE) © 2020 Shirshak Bajgain
+[MIT License](./LICENSE) © 2020 Shirshak Bajgain
