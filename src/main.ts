@@ -18,7 +18,7 @@ function getEdgeExe(edgeDirName: string) {
 
   let paths = []
   let windowsEdgeDirectory, i, prefix
-  let suffix = edgeDirName + "\\Application\\msedge.exe"
+  let suffix = "\\Microsoft" + edgeDirName + "\\Application\\msedge.exe"
   let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]]
 
   for (i = 0; i < prefixes.length; i++) {

@@ -6,23 +6,20 @@
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
 ```javascript
-const edgePaths = require("edge-paths")
+let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require(".") // Replace with require("edge-paths")
 
-// On macOS
+console.log(getEdgeBetaPath())
+console.log(getEdgeCanaryPath())
+console.log(getEdgeDevPath())
+console.log(getEdgePath())
 
-edgePaths.edge //=> '/Users/quantum/Desktop/code/edge-paths/node_modules/edge-launcher/dist/x86/MicrosoftEdgeLauncher.exe'
-
-// On Linux
-
-edgePaths.edge //=> 'edge'
+// On OSX
+// /Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta
+// /Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary
+// /Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Dev
+// /Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge
 
 // On Windows
-
-edgePaths.edge //=> 'C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe'
-
-// On Solaris (Unsupported platform)
-
-edgePaths.edge //=> null
 ```
 
 ## Installation
@@ -31,6 +28,10 @@ edgePaths.edge //=> null
 
 ```
 npm install edge-paths
+
+or
+
+yarn add edge-paths
 ```
 
 ## API
@@ -38,23 +39,6 @@ npm install edge-paths
 ```javascript
 const edgePaths = require("edge-paths")
 ```
-
-### edgePaths.chrome, edgePaths.chromeCanary, edgePaths.chromium
-
-Type: `string` or `null`
-
-```javascript
-const { execFile } = require("child_process")
-const { promisify } = require("util")
-const { chrome, chromeCanary } = require("edge-paths")
-
-;(async () => {
-  ;(await promisify(execFile)(chrome, ["--version"])).stdout //=> 'Google Chrome 71.0.3578.98 \n'
-  ;(await promisify(execFile)(chromeCanary, ["--version"])).stdout //=> 'Google Chrome 74.0.3689.0 canary\n'
-})()
-```
-
-Whether each property is a full path, just a binary name or `null` depends on the current [platform](https://nodejs.org/api/process.html#process_process_platform).
 
 ## License
 
