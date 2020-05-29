@@ -2,6 +2,8 @@ import fs from "fs"
 import path from "path"
 import which from "which"
 
+let platform = process.platform
+
 // Return location of edge.exe file for a given Edge directory (available: "Edge", "Edge SxS").
 function getEdgeExe(edgeDirName: string) {
   // Only run these checks on win32
@@ -66,27 +68,63 @@ let edge = {
   win32: getEdgeExe("Edge"),
 }
 
-let dev = {
+let edgeDev = {
   linux: getBin(["edge", "edge-stable"]),
   darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Dev"),
   win32: getEdgeExe("Edge"),
 }
 
-let beta = {
+let edgeBeta = {
   linux: getBin(["edge", "edge-stable"]),
   darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
   win32: getEdgeExe("Edge"),
 }
 
-let canary = {
+let edgeCanary = {
   linux: getBin(["edge-canary", "edge-unstable"]),
   darwin: getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
   win32: getEdgeExe("Edge SxS"),
 }
 
-module.exports = {
-  edge,
-  dev,
-  canary,
-  beta,
+function throwInvalidPlatformError() {
+  throw {
+    package: "edge-paths",
+    message: "Your platform is not supported. Only linux, mac and windows are supported currently",
+  }
+}
+
+export function getEdgePath() {
+  if (platform && platform in edge) {
+    //@ts-ignore
+    return edge[platform]
+  }
+  throwInvalidPlatformError()
+}
+
+export function getEdgeDevPath() {
+  if (platform && platform in edgeDev) {
+    //@ts-ignore
+    return edgeDev[platform]
+  }
+  throwInvalidPlatformError()
+}
+
+export function getEdgeBetaPath() {
+  if (platform && platform in edgeBeta) {
+    //@ts-ignore
+    return edgeBeta[platform]
+  }
+  throwInvalidPlatformError()
+}
+
+export function getEdgeCanaryPath() {
+  if (platform && platform in edgeCanary) {
+    //@ts-ignore
+    return edgeCanary[platform]
+  }
+  throwInvalidPlatformError()
+}
+
+if (require.main === module) {
+  console.log(module.exports)
 }
