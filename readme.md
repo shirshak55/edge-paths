@@ -20,6 +20,10 @@ console.log(getEdgePath())
 // /Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge
 
 // On Windows
+// C:\Program Files (x86)\Microsoft\Edge Beta\Application\msedge.exe
+// C:\Program Files (x86)\Microsoft\Edge Canary\Application\msedge.exe
+// C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe
+// C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 ```
 
 ## Installation
