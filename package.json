@@ -1,13 +1,13 @@
 {
   "name": "edge-paths",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Get the paths of edge browser easily",
   "main": "dist/main.js",
   "typings": "src/main.ts",
   "repository": "http://github.com/shirshak55/edge-paths",
   "author": "shirshak",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc"
