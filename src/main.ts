@@ -1,12 +1,6 @@
 import fs from "fs"
 import path from "path"
 
-// Uncomment following line once linux gets released on linux and don't forget to add dependencies
-//  "dependencies": {
-//   "which": "^2.0.2"
-// },
-// import which from "which"
-
 let platform = process.platform
 
 // Return location of msedge.exe file for a given Edge directory (available: "Edge", "Edge Dev","Edge Beta","Edge Canary").
@@ -15,92 +9,42 @@ function getEdgeExe(edgeDirName: string) {
   if (process.platform !== "win32") {
     return null
   }
-
   let paths = []
-  let windowsEdgeDirectory, i, prefix
-  let suffix = "\\Microsoft\\" + edgeDirName + "\\Application\\msedge.exe"
+  let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
   let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]]
 
-  for (i = 0; i < prefixes.length; i++) {
-    prefix = prefixes[i]
-
-    if (!prefix) {
-      continue
-    }
-
-    try {
-      windowsEdgeDirectory = path.join(prefix, suffix)
-      paths.push(windowsEdgeDirectory)
-      fs.accessSync(windowsEdgeDirectory)
-      return windowsEdgeDirectory
-    } catch (e) {}
-  }
-
-  if (!windowsEdgeDirectory) {
-    throw {
-      package: "edge-paths",
-      message: "Edge browser not found. Please recheck your installation.",
-      paths,
+  for (let prefix of prefixes) {
+    if (prefix) {
+      let edgePath = path.join(prefix, suffix)
+      paths.push(edgePath)
+      if (fs.existsSync(edgePath)) {
+        return edgePath
+      }
     }
   }
-  return windowsEdgeDirectory
+
+  throw {
+    package: "edge-paths",
+    message: "Edge browser not found. Please recheck your installation.",
+    paths,
+  }
 }
-
-// Todo  Uncomment once edge gets linux support
-// function getBin(commands: string[]) {
-//   // Don't run these checks on win32
-//   if (process.platform !== "linux") {
-//     return null
-//   }
-//   let bin, i
-//   for (i = 0; i < commands.length; i++) {
-//     try {
-//       if (which.sync(commands[i])) {
-//         bin = commands[i]
-//         break
-//       }
-//     } catch (e) {}
-//   }
-//   return bin
-// }
 
 function getEdgeDarwin(defaultPath: string) {
   if (process.platform !== "darwin") {
     return null
   }
 
-  try {
-    let homePath = path.join(process.env.HOME!, defaultPath)
-    fs.accessSync(homePath)
-    return homePath
-  } catch (e) {
+  // let homePath = path.join(process.env.HOME!, defaultPath)
+  if (fs.existsSync(defaultPath)) {
     return defaultPath
   }
-}
 
-let edge = {
-  // Todo Uncomment once edge gets released for linux
-  // linux: getBin(["edge", "edge-stable"]),
-  darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge"),
-  win32: getEdgeExe("Edge"),
-}
-
-let edgeDev = {
-  // linux: getBin(["edge", "edge-stable"]),
-  darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Dev"),
-  win32: getEdgeExe("Edge Dev"),
-}
-
-let edgeBeta = {
-  // linux: getBin(["edge", "edge-stable"]),
-  darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
-  win32: getEdgeExe("Edge Beta"),
-}
-
-let edgeCanary = {
-  // linux: getBin(["edge-canary", "edge-unstable"]),
-  darwin: getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
-  win32: getEdgeExe("Edge Canary"),
+  throw {
+    package: "edge-paths",
+    message: `Edge browser not found. Please recheck your installation. Path ${defaultPath}`,
+    path: defaultPath,
+  }
 }
 
 function throwInvalidPlatformError() {
@@ -111,6 +55,13 @@ function throwInvalidPlatformError() {
 }
 
 export function getEdgePath() {
+  let edge = {
+    // Todo Uncomment once edge gets released for linux
+    // linux: getBin(["edge", "edge-stable"]),
+    darwin: getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
+    win32: getEdgeExe("Edge"),
+  }
+
   if (platform && platform in edge) {
     //@ts-ignore
     return edge[platform]
@@ -119,6 +70,12 @@ export function getEdgePath() {
 }
 
 export function getEdgeDevPath() {
+  let edgeDev = {
+    // linux: getBin(["edge", "edge-stable"]),
+    darwin: getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
+    win32: getEdgeExe("Edge Dev"),
+  }
+
   if (platform && platform in edgeDev) {
     //@ts-ignore
     return edgeDev[platform]
@@ -127,6 +84,12 @@ export function getEdgeDevPath() {
 }
 
 export function getEdgeBetaPath() {
+  let edgeBeta = {
+    // linux: getBin(["edge", "edge-stable"]),
+    darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
+    win32: getEdgeExe("Edge Beta"),
+  }
+
   if (platform && platform in edgeBeta) {
     //@ts-ignore
     return edgeBeta[platform]
@@ -135,6 +98,12 @@ export function getEdgeBetaPath() {
 }
 
 export function getEdgeCanaryPath() {
+  let edgeCanary = {
+    // linux: getBin(["edge-canary", "edge-unstable"]),
+    darwin: getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
+    win32: getEdgeExe("Edge SxS"),
+  }
+
   if (platform && platform in edgeCanary) {
     //@ts-ignore
     return edgeCanary[platform]
@@ -143,5 +112,24 @@ export function getEdgeCanaryPath() {
 }
 
 if (require.main === module) {
-  console.log(module.exports)
+  try {
+    console.log("Edge Beta", getEdgeBetaPath())
+  } catch (e) {
+    console.log(e)
+  }
+  try {
+    console.log("Edge Canary", getEdgeCanaryPath())
+  } catch (e) {
+    console.log(e)
+  }
+  try {
+    console.log("Edge Dev", getEdgeDevPath())
+  } catch (e) {
+    console.log(e)
+  }
+  try {
+    console.log("Edge", getEdgePath())
+  } catch (e) {
+    console.log(e)
+  }
 }
