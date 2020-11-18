@@ -1,6 +1,10 @@
 # Edge Paths
 
 [![npm version](https://img.shields.io/npm/v/edge-paths.svg)](https://www.npmjs.com/package/edge-paths)
+![CI](https://github.com/shirshak55/oha/workflows/CI/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/sindresorhus/got/badge.svg?branch=master)](https://coveralls.io/github/shirshak55/edge-paths?branch=master)
+[![Downloads](https://img.shields.io/npm/dm/edge-paths.svg)](https://npmjs.com/edge-paths)
+[![Install size](https://packagephobia.now.sh/badge?p=edge-paths)](https://packagephobia.now.sh/result?p=edge-paths)
 
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
