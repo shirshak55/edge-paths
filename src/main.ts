@@ -1,10 +1,41 @@
 import fs from "fs"
 import path from "path"
+import which from "which"
 
 let platform = process.platform
 
-// Return location of msedge.exe file for a given Edge directory (available: "Edge", "Edge Dev","Edge Beta","Edge Canary").
-function getEdgeExe(edgeDirName: string) {
+function getEdgeLinux(binaryNames: Array<string> | string) {
+  // Only run these checks on win32
+  if (process.platform !== "linux") {
+    return null
+  }
+
+  if (!Array.isArray(binaryNames)) {
+    binaryNames = [binaryNames]
+  }
+
+  let paths = []
+  for (let name of binaryNames) {
+    try {
+      let path = which.sync(name)
+
+      return path
+    } catch (e) {
+      // This means path doesn't exists
+      paths.push(name)
+    }
+  }
+
+  throw {
+    package: "edge-paths",
+    message:
+      "Edge browser not found. Please recheck your installation. \
+      Here are list of executable we tried to search",
+    paths,
+  }
+}
+
+function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS") {
   // Only run these checks on win32
   if (process.platform !== "win32") {
     return null
@@ -56,8 +87,7 @@ function throwInvalidPlatformError() {
 
 export function getEdgePath() {
   let edge = {
-    // Todo Uncomment once edge gets released for linux
-    // linux: getBin(["edge", "edge-stable"]),
+    linux: getEdgeLinux(["edge"]),
     darwin: getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
     win32: getEdgeExe("Edge"),
   }
@@ -71,7 +101,7 @@ export function getEdgePath() {
 
 export function getEdgeDevPath() {
   let edgeDev = {
-    // linux: getBin(["edge", "edge-stable"]),
+    linux: getEdgeLinux("microsoft-edge-dev"),
     darwin: getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
     win32: getEdgeExe("Edge Dev"),
   }
@@ -111,6 +141,7 @@ export function getEdgeCanaryPath() {
   throwInvalidPlatformError()
 }
 
+// With this you can run executable directly ./dist/main
 if (require.main === module) {
   try {
     console.log("Edge Beta", getEdgeBetaPath())

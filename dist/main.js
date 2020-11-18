@@ -6,7 +6,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getEdgeCanaryPath = exports.getEdgeBetaPath = exports.getEdgeDevPath = exports.getEdgePath = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
+const which_1 = __importDefault(require("which"));
 let platform = process.platform;
+function getEdgeLinux(binaryNames) {
+    if (process.platform !== "linux") {
+        return null;
+    }
+    if (!Array.isArray(binaryNames)) {
+        binaryNames = [binaryNames];
+    }
+    let paths = [];
+    for (let name of binaryNames) {
+        try {
+            let path = which_1.default.sync(name);
+            return path;
+        }
+        catch (e) {
+            paths.push(name);
+        }
+    }
+    throw {
+        package: "edge-paths",
+        message: "Edge browser not found. Please recheck your installation. \
+      Here are list of executable we tried to search",
+        paths,
+    };
+}
 function getEdgeExe(edgeDirName) {
     if (process.platform !== "win32") {
         return null;
@@ -50,6 +75,7 @@ function throwInvalidPlatformError() {
 }
 function getEdgePath() {
     let edge = {
+        linux: getEdgeLinux(["edge"]),
         darwin: getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
         win32: getEdgeExe("Edge"),
     };
@@ -61,6 +87,7 @@ function getEdgePath() {
 exports.getEdgePath = getEdgePath;
 function getEdgeDevPath() {
     let edgeDev = {
+        linux: getEdgeLinux("microsoft-edge-dev"),
         darwin: getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
         win32: getEdgeExe("Edge Dev"),
     };
