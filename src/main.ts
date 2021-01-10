@@ -42,15 +42,15 @@ function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS")
   }
   let paths = []
   let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
-  let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]]
+  let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]].filter(
+    (v) => !!v,
+  )
 
   for (let prefix of prefixes) {
-    if (prefix) {
-      let edgePath = path.join(prefix, suffix)
-      paths.push(edgePath)
-      if (fs.existsSync(edgePath)) {
-        return edgePath
-      }
+    let edgePath = path.join(prefix!, suffix)
+    paths.push(edgePath)
+    if (fs.existsSync(edgePath)) {
+      return edgePath
     }
   }
 
