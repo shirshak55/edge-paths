@@ -1,5 +1,12 @@
-// Replace line 2 with line 3 when you are using npm or yarn
-let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require(".")
+let {
+  getEdgeBetaPath,
+  getEdgeCanaryPath,
+  getEdgeDevPath,
+  getEdgePath,
+  getAnyEdgeStable,
+  getAnyEdgeLatest,
+} = require(".")
+// don't forget to replace above with following line
 // let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require("edge-paths")
 
 // Here is one naive example. Uncomment following line to test
@@ -23,3 +30,5 @@ findEdge(() => getEdgeBetaPath())
 findEdge(() => getEdgeCanaryPath())
 findEdge(() => getEdgeDevPath())
 findEdge(() => getEdgePath())
+findEdge(() => getAnyEdgeStable())
+findEdge(() => getAnyEdgeLatest())

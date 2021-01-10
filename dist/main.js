@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEdgeCanaryPath = exports.getEdgeBetaPath = exports.getEdgeDevPath = exports.getEdgePath = void 0;
+exports.getAnyEdgeStable = exports.getAnyEdgeLatest = exports.getEdgeCanaryPath = exports.getEdgeBetaPath = exports.getEdgeDevPath = exports.getEdgePath = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const which_1 = __importDefault(require("which"));
@@ -65,12 +65,6 @@ function getEdgeDarwin(defaultPath) {
         path: defaultPath,
     };
 }
-function throwInvalidPlatformError() {
-    throw {
-        package: "edge-paths",
-        message: "Your platform is not supported. Only mac and windows are supported currently",
-    };
-}
 function getEdgePath() {
     let edge = {
         linux: getEdgeLinux(["edge"]),
@@ -117,29 +111,71 @@ function getEdgeCanaryPath() {
     throwInvalidPlatformError();
 }
 exports.getEdgeCanaryPath = getEdgeCanaryPath;
+function getAnyEdgeLatest() {
+    try {
+        return getEdgeCanaryPath();
+    }
+    catch (e) { }
+    try {
+        return getEdgeDevPath();
+    }
+    catch (e) { }
+    try {
+        return getEdgeBetaPath();
+    }
+    catch (e) { }
+    try {
+        return getEdgeDevPath();
+    }
+    catch (e) { }
+    throw {
+        package: "edge-paths",
+        message: `Unable to find any path`,
+    };
+}
+exports.getAnyEdgeLatest = getAnyEdgeLatest;
+function getAnyEdgeStable() {
+    try {
+    }
+    catch (e) {
+        return getEdgePath();
+    }
+    try {
+        return getEdgeBetaPath();
+    }
+    catch (e) { }
+    try {
+        return getEdgeDevPath();
+    }
+    catch (e) { }
+    try {
+        return getEdgeCanaryPath();
+    }
+    catch (e) { }
+    throw {
+        package: "edge-paths",
+        message: `Unable to find any path`,
+    };
+}
+exports.getAnyEdgeStable = getAnyEdgeStable;
+function throwInvalidPlatformError() {
+    throw {
+        package: "edge-paths",
+        message: "Your platform is not supported. Only mac and windows are supported currently",
+    };
+}
 if (require.main === module) {
-    try {
-        console.log("Edge Beta", getEdgeBetaPath());
+    function findEdge(func) {
+        try {
+            let path = func();
+            console.log("Found path", path);
+        }
+        catch (e) {
+            console.log("Error on finding path", e);
+        }
     }
-    catch (e) {
-        console.log(e);
-    }
-    try {
-        console.log("Edge Canary", getEdgeCanaryPath());
-    }
-    catch (e) {
-        console.log(e);
-    }
-    try {
-        console.log("Edge Dev", getEdgeDevPath());
-    }
-    catch (e) {
-        console.log(e);
-    }
-    try {
-        console.log("Edge", getEdgePath());
-    }
-    catch (e) {
-        console.log(e);
-    }
+    findEdge(() => getEdgeBetaPath());
+    findEdge(() => getEdgeCanaryPath());
+    findEdge(() => getEdgeDevPath());
+    findEdge(() => getEdgePath());
 }

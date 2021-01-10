@@ -142,14 +142,12 @@ export function getAnyEdgeLatest(): string {
   } catch (e) {}
 
   try {
-  } catch (e) {
     return getEdgeDevPath()
-  }
+  } catch (e) {}
 
   try {
-  } catch (e) {
     return getEdgeBetaPath()
-  }
+  } catch (e) {}
 
   try {
     return getEdgeDevPath()
@@ -170,9 +168,8 @@ export function getAnyEdgeStable(): string {
   }
 
   try {
-  } catch (e) {
     return getEdgeBetaPath()
-  }
+  } catch (e) {}
 
   try {
     return getEdgeDevPath()
