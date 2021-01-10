@@ -1,4 +1,5 @@
-import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } from "." // Replace with "edge-paths"
+// Replace following line "." with "edge-paths" if you are using it as package
+import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath, getAnyEdgeStable, getAnyEdgeLatest } from "."
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())

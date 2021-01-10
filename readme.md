@@ -6,16 +6,42 @@
 
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
-Javascript
+### Why?
+
+- Well Documented
+- Well Tested
+- Used by popular players
+- Written with Love <3
+- Fully open sourced
+
+### Usage
+
+- At the moment linux support is only avail for dev channel. Once canary, beta and stable version are release
+  we shall update the package.
+
+###### Javascript
 
 ```javascript
-let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } = require("edge-paths")
+let {
+  getEdgeBetaPath,
+  getEdgeCanaryPath,
+  getEdgeDevPath,
+  getEdgePath,
+  getAnyEdgeStable,
+  getAnyEdgeLatest,
+} = require("edge-paths")
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
 console.log(getEdgeDevPath())
 console.log(getEdgePath())
+// console.log(getAnyEdgeStable())
+// console.log(getAnyEdgeLatest())
+```
 
+The output shall look like this according to your installation
+
+```javascript
 // On OSX
 // /Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta
 // /Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary
@@ -29,9 +55,13 @@ console.log(getEdgePath())
 // C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
 
 // On Linux
+// Beta edge not avail yet
+// Canary not avail
+// /usr/bin/microsoft-edge-dev
+// Stable not avail
 ```
 
-Typescript
+###### Typescript
 
 ```typescript
 import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } from "edge-paths"
@@ -57,9 +87,17 @@ $ yarn add edge-paths
 ## API
 
 ```javascript
-const edgePaths = require("edge-paths")
-const edgeStable = getEdgePath()
+let {
+  getEdgeBetaPath,
+  getEdgeCanaryPath,
+  getEdgeDevPath,
+  getEdgePath,
+  getAnyEdgeStable,
+  getAnyEdgeLatest,
+} = require("edge-paths")
 ```
+
+- `getAnyEdgeStable` or `getAnyEdgeLatest` might be more useful if you don't want any specific version.
 
 ## Used By
 

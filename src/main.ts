@@ -4,7 +4,7 @@ import which from "which"
 
 let platform = process.platform
 
-function getEdgeLinux(binaryNames: Array<string> | string) {
+function getEdgeLinux(binaryNames: Array<string> | string): string | null {
   // Only run these checks on win32
   if (process.platform !== "linux") {
     return null
@@ -35,11 +35,12 @@ function getEdgeLinux(binaryNames: Array<string> | string) {
   }
 }
 
-function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS") {
+function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS"): string | null {
   // Only run these checks on win32
   if (process.platform !== "win32") {
     return null
   }
+
   let paths = []
   let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
   let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]].filter(
@@ -61,7 +62,7 @@ function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS")
   }
 }
 
-function getEdgeDarwin(defaultPath: string) {
+function getEdgeDarwin(defaultPath: string): string | null {
   if (process.platform !== "darwin") {
     return null
   }
@@ -132,6 +133,59 @@ export function getEdgeCanaryPath() {
     return edgeCanary[platform]
   }
   throwInvalidPlatformError()
+}
+
+// This will try to get any edge from bleeding edge to most stable version
+export function getAnyEdgeLatest(): string {
+  try {
+    return getEdgeCanaryPath()
+  } catch (e) {}
+
+  try {
+  } catch (e) {
+    return getEdgeDevPath()
+  }
+
+  try {
+  } catch (e) {
+    return getEdgeBetaPath()
+  }
+
+  try {
+    return getEdgeDevPath()
+  } catch (e) {}
+
+  throw {
+    package: "edge-paths",
+    message: `Unable to find any path`,
+  }
+}
+
+// This will try to get edge from stable version to bleeding version
+// Useful for playwright, puppeteer related stuff
+export function getAnyEdgeStable(): string {
+  try {
+  } catch (e) {
+    return getEdgePath()
+  }
+
+  try {
+  } catch (e) {
+    return getEdgeBetaPath()
+  }
+
+  try {
+    return getEdgeDevPath()
+  } catch (e) {}
+
+  try {
+    return getEdgeCanaryPath()
+  } catch (e) {}
+
+  throw {
+    package: "edge-paths",
+    message: `Unable to find any path`,
+  }
 }
 
 // Helpers
