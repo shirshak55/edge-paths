@@ -15,10 +15,10 @@ function getEdgeLinux(binaryNames: Array<string> | string) {
   }
 
   let paths = []
+
   for (let name of binaryNames) {
     try {
       let path = which.sync(name)
-
       return path
     } catch (e) {
       // This means path doesn't exists
@@ -78,13 +78,6 @@ function getEdgeDarwin(defaultPath: string) {
   }
 }
 
-function throwInvalidPlatformError() {
-  throw {
-    package: "edge-paths",
-    message: "Your platform is not supported. Only mac and windows are supported currently",
-  }
-}
-
 export function getEdgePath() {
   let edge = {
     linux: getEdgeLinux(["edge"]),
@@ -141,26 +134,30 @@ export function getEdgeCanaryPath() {
   throwInvalidPlatformError()
 }
 
-// With this you can run executable directly ./dist/main
+// Helpers
+function throwInvalidPlatformError() {
+  throw {
+    package: "edge-paths",
+    message: "Your platform is not supported. Only mac and windows are supported currently",
+  }
+}
+
+// With this you can directly do node dist/main.js
+// (dist/main.js) instead of src/main.ts because
+// typescript compiler ultimately returns javascript not typescript
+// However you can try ts node if you want to execute
+// typescript directly
 if (require.main === module) {
-  try {
-    console.log("Edge Beta", getEdgeBetaPath())
-  } catch (e) {
-    console.log(e)
+  function findEdge(func: () => undefined) {
+    try {
+      let path = func()
+      console.log("Found path", path)
+    } catch (e) {
+      console.log("Error on finding path", e)
+    }
   }
-  try {
-    console.log("Edge Canary", getEdgeCanaryPath())
-  } catch (e) {
-    console.log(e)
-  }
-  try {
-    console.log("Edge Dev", getEdgeDevPath())
-  } catch (e) {
-    console.log(e)
-  }
-  try {
-    console.log("Edge", getEdgePath())
-  } catch (e) {
-    console.log(e)
-  }
+  findEdge(() => getEdgeBetaPath())
+  findEdge(() => getEdgeCanaryPath())
+  findEdge(() => getEdgeDevPath())
+  findEdge(() => getEdgePath())
 }

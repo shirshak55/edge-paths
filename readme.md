@@ -1,8 +1,6 @@
 # Edge Paths
 
 [![npm version](https://img.shields.io/npm/v/edge-paths.svg)](https://www.npmjs.com/package/edge-paths)
-![CI](https://github.com/shirshak55/oha/workflows/CI/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/sindresorhus/got/badge.svg?branch=master)](https://coveralls.io/github/shirshak55/edge-paths?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/edge-paths.svg)](https://npmjs.com/edge-paths)
 [![Install size](https://packagephobia.now.sh/badge?p=edge-paths)](https://packagephobia.now.sh/result?p=edge-paths)
 
@@ -29,6 +27,8 @@ console.log(getEdgePath())
 // C:\Program Files (x86)\Microsoft\Edge Canary\Application\msedge.exe
 // C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe
 // C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+
+// On Linux
 ```
 
 Typescript
@@ -46,22 +46,29 @@ console.log(getEdgePath())
 
 [Use](https://docs.npmjs.com/cli/install) [npm](https://docs.npmjs.com/about-npm/).
 
-```
+```bash
+$ npm install edge-paths
 
-npm install edge-paths
+// or
 
-or
-
-yarn add edge-paths
-
+$ yarn add edge-paths
 ```
 
 ## API
 
 ```javascript
 const edgePaths = require("edge-paths")
+const edgeStable = getEdgePath()
 ```
+
+## Used By
+
+- [devtools](https://www.npmjs.com/package/devtools)
+
+- Please send PR if you are using edge paths. We will be accepting first 10 request.
 
 ## License
 
-[MIT License](./LICENSE) © 2020 Shirshak Bajgain
+[MIT License](./LICENSE)
+
+© 2020 Shirshak Bajgain
