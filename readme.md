@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/edge-paths.svg)](https://www.npmjs.com/package/edge-paths)
 [![Downloads](https://img.shields.io/npm/dm/edge-paths.svg)](https://npmjs.com/edge-paths)
 [![Install size](https://packagephobia.now.sh/badge?p=edge-paths)](https://packagephobia.now.sh/result?p=edge-paths)
+![Test Edge Paths](https://github.com/shirshak55/edge-paths/workflows/Test%20Edge%20Paths/badge.svg)
 
 Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) in the current platform
 
