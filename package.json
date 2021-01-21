@@ -1,6 +1,6 @@
 {
   "name": "edge-paths",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Get the paths of edge browser easily",
   "main": "dist/main.js",
   "typings": "src/main.ts",

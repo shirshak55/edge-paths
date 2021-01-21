@@ -5,7 +5,6 @@ import which from "which"
 let platform = process.platform
 
 function getEdgeLinux(binaryNames: Array<string> | string): string | null {
-  // Only run these checks on win32
   if (process.platform !== "linux") {
     return null
   }
@@ -36,7 +35,6 @@ function getEdgeLinux(binaryNames: Array<string> | string): string | null {
 }
 
 function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS"): string | null {
-  // Only run these checks on win32
   if (process.platform !== "win32") {
     return null
   }
@@ -67,7 +65,6 @@ function getEdgeDarwin(defaultPath: string): string | null {
     return null
   }
 
-  // let homePath = path.join(process.env.HOME!, defaultPath)
   if (fs.existsSync(defaultPath)) {
     return defaultPath
   }
