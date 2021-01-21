@@ -53,10 +53,10 @@ jobs:
       - run: wget -O dev.pkg https://officecdn-microsoft-com.akamaized.net/pr/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/MicrosoftEdgeDev-89.0.752.1.pkg?platform=Mac&Consent=0&channel=Dev
       - run: wget -O canary.pkg https://officecdn-microsoft-com.akamaized.net/pr/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/MicrosoftEdgeCanary-89.0.760.0.pkg?platform=Mac&Consent=0&channel=Canary
       - run: wget -O stable.pkg https://officecdn-microsoft-com.akamaized.net/pr/C1297A47-86C4-4C1F-97FA-950631F94777/MacAutoupdate/MicrosoftEdge-87.0.664.75.pkg?platform=Mac&Consent=0&channel=Stable
-      - run: sudo installer -pkg canary.pkg -target /
-      - run: sudo installer -pkg dev.pkg -target /
-      - run: sudo installer -pkg beta.pkg -target /
-      - run: sudo installer -pkg stable.pkg -target /
+      - run: sudo installer -allowUntrusted -pkg canary.pkg -target /
+      - run: sudo installer -allowUntrusted -pkg dev.pkg -target /
+      - run: sudo installer -allowUntrusted -pkg beta.pkg -target /
+      - run: sudo installer -allowUntrusted -pkg stable.pkg -target /
       - run: node tests/index.js
 
   # build-window:
