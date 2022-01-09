@@ -1,6 +1,13 @@
-// Replace following line "." with "edge-paths" if you are using it as package
-import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath, getAnyEdgeStable, getAnyEdgeLatest } from "."
+import {
+	getEdgeBetaPath,
+	getEdgeCanaryPath,
+	getEdgeDevPath,
+	getEdgePath,
+	getAnyEdgeStable,
+	getAnyEdgeLatest,
+} from "./dist/main.js"
 
+console.log(getAnyEdgeStable())
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
 console.log(getEdgeDevPath())

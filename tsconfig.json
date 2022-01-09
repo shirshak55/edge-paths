@@ -1,27 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "lib": ["dom", "es2015"],
-    "inlineSourceMap": false,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
     "outDir": "./dist",
     "rootDir": "./src",
     "moduleResolution": "node",
-    "skipLibCheck": true,
+    "allowSyntheticDefaultImports":true,
+    "declaration": true,
     "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "strict": true    
   },
   "exclude": ["node_modules"],
   "files": ["./src/main.ts"]

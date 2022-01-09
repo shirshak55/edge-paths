@@ -9,27 +9,27 @@ Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) i
 
 ### Why?
 
-- Well Documented
-- Well Tested
-- Used by popular players
-- Written with Love <3
-- Fully open sourced
+-   Well Documented
+-   Well Tested
+-   Used by popular players
+-   Written with Love <3
+-   Fully open sourced
 
 ### Usage
 
-- At the moment linux support is only avail for dev channel. Once canary, beta and stable version are release
-  we shall update the package.
+-   At the moment linux support is only avail for dev channel. Once canary, beta and stable version are release
+    we shall update the package.
 
 ###### Javascript
 
 ```javascript
 let {
-  getEdgeBetaPath,
-  getEdgeCanaryPath,
-  getEdgeDevPath,
-  getEdgePath,
-  getAnyEdgeStable,
-  getAnyEdgeLatest,
+	getEdgeBetaPath,
+	getEdgeCanaryPath,
+	getEdgeDevPath,
+	getEdgePath,
+	getAnyEdgeStable,
+	getAnyEdgeLatest,
 } = require("edge-paths")
 
 console.log(getEdgeBetaPath())
@@ -65,7 +65,12 @@ The output shall look like this according to your installation
 ###### Typescript
 
 ```typescript
-import { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } from "edge-paths"
+import {
+	getEdgeBetaPath,
+	getEdgeCanaryPath,
+	getEdgeDevPath,
+	getEdgePath,
+} from "edge-paths"
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
@@ -89,22 +94,22 @@ $ yarn add edge-paths
 
 ```javascript
 let {
-  getEdgeBetaPath,
-  getEdgeCanaryPath,
-  getEdgeDevPath,
-  getEdgePath,
-  getAnyEdgeStable,
-  getAnyEdgeLatest,
+	getEdgeBetaPath,
+	getEdgeCanaryPath,
+	getEdgeDevPath,
+	getEdgePath,
+	getAnyEdgeStable,
+	getAnyEdgeLatest,
 } = require("edge-paths")
 ```
 
-- `getAnyEdgeStable` or `getAnyEdgeLatest` might be more useful if you don't want any specific version.
+-   `getAnyEdgeStable` or `getAnyEdgeLatest` might be more useful if you don't want any specific version.
 
 ## Used By
 
-- [devtools](https://www.npmjs.com/package/devtools)
+-   [devtools](https://www.npmjs.com/package/devtools)
 
-- Please send PR if you are using edge paths. We will be accepting first 10 request.
+-   Please send PR if you are using edge paths. We will be accepting first 10 request.
 
 ## License
 
