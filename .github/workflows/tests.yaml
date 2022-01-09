@@ -8,7 +8,6 @@ on:
 jobs:
     build-ununtu:
         runs-on: ${{ matrix.os }}
-        needs: build-window
         strategy:
             matrix:
                 os:
@@ -37,7 +36,6 @@ jobs:
 
     build-macos:
         runs-on: ${{ matrix.os }}
-        needs: build-ununtu
         strategy:
             matrix:
                 os:
