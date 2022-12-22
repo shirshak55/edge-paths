@@ -1,211 +1,231 @@
-import fs from "fs"
+import { existsSync } from "fs"
 import path from "path"
 import which from "which"
 
 let platform = process.platform
 
-function getEdgeLinux(binaryNames: Array<string> | string): string | null {
-  if (process.platform !== "linux") {
-    return null
-  }
+// Assumes platform is linux so caller
+// must maintain this invariant.
+function getEdgeLinux(
+	name:
+		| "microsoft-edge-dev"
+		| "microsoft-edge-beta"
+		| "microsoft-edge-stable",
+): string | null {
+	try {
+		let path = which.sync(name)
+		return path
+	} catch (e) {}
 
-  if (!Array.isArray(binaryNames)) {
-    binaryNames = [binaryNames]
-  }
-
-  let paths = []
-
-  for (let name of binaryNames) {
-    try {
-      let path = which.sync(name)
-      return path
-    } catch (e) {
-      // This means path doesn't exists
-      paths.push(name)
-    }
-  }
-
-  throw {
-    package: "edge-paths",
-    message:
-      "Edge browser not found. Please recheck your installation. \
-      Here are list of executable we tried to search",
-    paths,
-  }
+	return null
 }
 
-function getEdgeExe(edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS"): string | null {
-  if (process.platform !== "win32") {
-    return null
-  }
+// Assumes Window so caller must maintain
+// this invaraint
+function getEdgeWindows(
+	edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS",
+): string | null {
+	let paths = []
+	let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
+	let prefixes = [
+		process.env.LOCALAPPDATA,
+		process.env.PROGRAMFILES,
+		process.env["PROGRAMFILES(X86)"],
+	].filter((v) => !!v)
 
-  let paths = []
-  let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
-  let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]].filter(
-    (v) => !!v,
-  )
+	for (let prefix of prefixes) {
+		let edgePath = path.join(prefix!, suffix)
+		paths.push(edgePath)
+		if (existsSync(edgePath)) {
+			return edgePath
+		}
+	}
 
-  for (let prefix of prefixes) {
-    let edgePath = path.join(prefix!, suffix)
-    paths.push(edgePath)
-    if (fs.existsSync(edgePath)) {
-      return edgePath
-    }
-  }
-
-  throw {
-    package: "edge-paths",
-    message: "Edge browser not found. Please recheck your installation.",
-    paths,
-  }
+	return null
 }
 
+// Caller must ensure the platform is darwin
 function getEdgeDarwin(defaultPath: string): string | null {
-  if (process.platform !== "darwin") {
-    return null
-  }
+	if (existsSync(defaultPath)) {
+		return defaultPath
+	}
 
-  if (fs.existsSync(defaultPath)) {
-    return defaultPath
-  }
-
-  throw {
-    package: "edge-paths",
-    message: `Edge browser not found. Please recheck your installation. Path ${defaultPath}`,
-    path: defaultPath,
-  }
+	return null
 }
 
-export function getEdgePath() {
-  let edge = {
-    linux: getEdgeLinux(["edge"]),
-    darwin: getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
-    win32: getEdgeExe("Edge"),
-  }
-
-  if (platform && platform in edge) {
-    //@ts-ignore
-    return edge[platform]
-  }
-  throwInvalidPlatformError()
+const edgePaths = {
+	edge: {
+		linux: () => getEdgeLinux("microsoft-edge-stable"),
+		darwin: () =>
+			getEdgeDarwin(
+				"/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+			),
+		win32: () => getEdgeWindows("Edge"),
+	},
+	dev: {
+		linux: () => getEdgeLinux("microsoft-edge-dev"),
+		darwin: () =>
+			getEdgeDarwin(
+				"/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev",
+			),
+		win32: () => getEdgeWindows("Edge Dev"),
+	},
+	beta: {
+		linux: () => getEdgeLinux("microsoft-edge-beta"),
+		darwin: () =>
+			getEdgeDarwin(
+				"/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta",
+			),
+		win32: () => getEdgeWindows("Edge Beta"),
+	},
+	canary: {
+		// linux: getEdgeLinux("microsoft-edge-beta"),
+		darwin: () =>
+			getEdgeDarwin(
+				"/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary",
+			),
+		win32: () => getEdgeWindows("Edge SxS"),
+	},
 }
 
-export function getEdgeDevPath() {
-  let edgeDev = {
-    linux: getEdgeLinux("microsoft-edge-dev"),
-    darwin: getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
-    win32: getEdgeExe("Edge Dev"),
-  }
+// Best way to get edge path in cross platform way
+export function getEdgePath(): string {
+	let edge = edgePaths.edge
 
-  if (platform && platform in edgeDev) {
-    //@ts-ignore
-    return edgeDev[platform]
-  }
-  throwInvalidPlatformError()
+	if (platform && platform in edgePaths.edge) {
+		let pth = edge[platform as keyof typeof edge]()
+		if (pth) {
+			return pth
+		}
+	}
+	throwInvalidPlatformError("Edge Stable", edgePaths)
 }
 
-export function getEdgeBetaPath() {
-  let edgeBeta = {
-    // linux: getBin(["edge", "edge-stable"]),
-    darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
-    win32: getEdgeExe("Edge Beta"),
-  }
+// Best way to get edge developer version path.
+export function getEdgeDevPath(): string {
+	let edgeDev = edgePaths.dev
 
-  if (platform && platform in edgeBeta) {
-    //@ts-ignore
-    return edgeBeta[platform]
-  }
-  throwInvalidPlatformError()
+	if (platform && platform in edgeDev) {
+		let pth = edgeDev[platform as keyof typeof edgeDev]()
+		if (pth) {
+			return pth
+		}
+	}
+	throwInvalidPlatformError("Edge Dev", edgePaths)
 }
 
-export function getEdgeCanaryPath() {
-  let edgeCanary = {
-    // linux: getBin(["edge-canary", "edge-unstable"]),
-    darwin: getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
-    win32: getEdgeExe("Edge SxS"),
-  }
+// Best way to get edge beta path
+export function getEdgeBetaPath(): string {
+	let edgeBeta = edgePaths.beta
 
-  if (platform && platform in edgeCanary) {
-    //@ts-ignore
-    return edgeCanary[platform]
-  }
-  throwInvalidPlatformError()
+	if (platform && platform in edgeBeta) {
+		let pth = edgeBeta[platform as keyof typeof edgeBeta]()
+		if (pth) {
+			return pth
+		}
+	}
+	throwInvalidPlatformError("Edge Beta", edgePaths)
+}
+
+export function getEdgeCanaryPath(): string {
+	let edgeCanary = edgePaths.canary
+
+	if (platform && platform in edgeCanary) {
+		let pth = edgeCanary[platform as keyof typeof edgeCanary]()
+		if (pth) {
+			return pth
+		}
+	}
+	throwInvalidPlatformError("Edge Canary", edgePaths)
 }
 
 // This will try to get any edge from bleeding edge to most stable version
 export function getAnyEdgeLatest(): string {
-  try {
-    return getEdgeCanaryPath()
-  } catch (e) {}
+	try {
+		return getEdgeCanaryPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeDevPath()
-  } catch (e) {}
+	try {
+		return getEdgeDevPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeBetaPath()
-  } catch (e) {}
+	try {
+		return getEdgeBetaPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeDevPath()
-  } catch (e) {}
+	try {
+		return getEdgeDevPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  throw {
-    package: "edge-paths",
-    message: `Unable to find any path`,
-  }
+	throw {
+		name: "edge-paths",
+		message: `Unable to find any path`,
+	}
 }
 
 // This will try to get edge from stable version to bleeding version
 // Useful for playwright, puppeteer related stuff
 export function getAnyEdgeStable(): string {
-  try {
-  } catch (e) {
-    return getEdgePath()
-  }
+	try {
+		return getEdgePath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeBetaPath()
-  } catch (e) {}
+	try {
+		return getEdgeBetaPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeDevPath()
-  } catch (e) {}
+	try {
+		return getEdgeDevPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  try {
-    return getEdgeCanaryPath()
-  } catch (e) {}
+	try {
+		return getEdgeCanaryPath()
+	} catch (e) {
+		throwIfNotEdgePathIssue(e)
+	}
 
-  throw {
-    package: "edge-paths",
-    message: `Unable to find any path`,
-  }
+	throw {
+		name: "edge-paths",
+		message: `Unable to find any path`,
+	}
 }
 
 // Helpers
-function throwInvalidPlatformError() {
-  throw {
-    package: "edge-paths",
-    message: "Your platform is not supported. Only mac and windows are supported currently",
-  }
+
+function throwInvalidPlatformError(
+	additionalInfo: string = "",
+	otherDetails?: any,
+): never {
+	throw {
+		name: "edge-paths",
+		message: `Couldn't find the edge browser. ${additionalInfo}`,
+		otherDetails,
+	}
 }
 
-// With this you can directly do node dist/main.js
-// (dist/main.js) instead of src/main.ts because
-// typescript compiler ultimately returns javascript not typescript
-// However you can try ts node if you want to execute
-// typescript directly
-if (require.main === module) {
-  function findEdge(func: () => undefined) {
-    try {
-      let path = func()
-      console.log("Found path", path)
-    } catch (e) {
-      console.log("Error on finding path", e)
-    }
-  }
-  findEdge(() => getEdgeBetaPath())
-  findEdge(() => getEdgeCanaryPath())
-  findEdge(() => getEdgeDevPath())
-  findEdge(() => getEdgePath())
+function throwIfNotEdgePathIssue(obj: any) {
+	if (
+		Object.prototype.toString.call(obj) === "[object Object]" &&
+		obj &&
+		obj.name &&
+		obj.name === "edge-paths"
+	) {
+		return true
+	}
+
+	throw obj
 }

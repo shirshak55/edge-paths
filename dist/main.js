@@ -1,181 +1,172 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAnyEdgeStable = exports.getAnyEdgeLatest = exports.getEdgeCanaryPath = exports.getEdgeBetaPath = exports.getEdgeDevPath = exports.getEdgePath = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const which_1 = __importDefault(require("which"));
+import { existsSync } from "fs";
+import path from "path";
+import which from "which";
 let platform = process.platform;
-function getEdgeLinux(binaryNames) {
-    if (process.platform !== "linux") {
-        return null;
+function getEdgeLinux(name) {
+    try {
+        let path = which.sync(name);
+        return path;
     }
-    if (!Array.isArray(binaryNames)) {
-        binaryNames = [binaryNames];
-    }
-    let paths = [];
-    for (let name of binaryNames) {
-        try {
-            let path = which_1.default.sync(name);
-            return path;
-        }
-        catch (e) {
-            paths.push(name);
-        }
-    }
-    throw {
-        package: "edge-paths",
-        message: "Edge browser not found. Please recheck your installation. \
-      Here are list of executable we tried to search",
-        paths,
-    };
+    catch (e) { }
+    return null;
 }
-function getEdgeExe(edgeDirName) {
-    if (process.platform !== "win32") {
-        return null;
-    }
+function getEdgeWindows(edgeDirName) {
     let paths = [];
     let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`;
-    let prefixes = [process.env.LOCALAPPDATA, process.env.PROGRAMFILES, process.env["PROGRAMFILES(X86)"]].filter((v) => !!v);
+    let prefixes = [
+        process.env.LOCALAPPDATA,
+        process.env.PROGRAMFILES,
+        process.env["PROGRAMFILES(X86)"],
+    ].filter((v) => !!v);
     for (let prefix of prefixes) {
-        let edgePath = path_1.default.join(prefix, suffix);
+        let edgePath = path.join(prefix, suffix);
         paths.push(edgePath);
-        if (fs_1.default.existsSync(edgePath)) {
+        if (existsSync(edgePath)) {
             return edgePath;
         }
     }
-    throw {
-        package: "edge-paths",
-        message: "Edge browser not found. Please recheck your installation.",
-        paths,
-    };
+    return null;
 }
 function getEdgeDarwin(defaultPath) {
-    if (process.platform !== "darwin") {
-        return null;
-    }
-    if (fs_1.default.existsSync(defaultPath)) {
+    if (existsSync(defaultPath)) {
         return defaultPath;
     }
-    throw {
-        package: "edge-paths",
-        message: `Edge browser not found. Please recheck your installation. Path ${defaultPath}`,
-        path: defaultPath,
-    };
+    return null;
 }
-function getEdgePath() {
-    let edge = {
-        linux: getEdgeLinux(["edge"]),
-        darwin: getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
-        win32: getEdgeExe("Edge"),
-    };
-    if (platform && platform in edge) {
-        return edge[platform];
+const edgePaths = {
+    edge: {
+        linux: () => getEdgeLinux("microsoft-edge-stable"),
+        darwin: () => getEdgeDarwin("/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
+        win32: () => getEdgeWindows("Edge"),
+    },
+    dev: {
+        linux: () => getEdgeLinux("microsoft-edge-dev"),
+        darwin: () => getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
+        win32: () => getEdgeWindows("Edge Dev"),
+    },
+    beta: {
+        linux: () => getEdgeLinux("microsoft-edge-beta"),
+        darwin: () => getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
+        win32: () => getEdgeWindows("Edge Beta"),
+    },
+    canary: {
+        darwin: () => getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
+        win32: () => getEdgeWindows("Edge SxS"),
+    },
+};
+export function getEdgePath() {
+    let edge = edgePaths.edge;
+    if (platform && platform in edgePaths.edge) {
+        let pth = edge[platform]();
+        if (pth) {
+            return pth;
+        }
     }
-    throwInvalidPlatformError();
+    throwInvalidPlatformError("Edge Stable", edgePaths);
 }
-exports.getEdgePath = getEdgePath;
-function getEdgeDevPath() {
-    let edgeDev = {
-        linux: getEdgeLinux("microsoft-edge-dev"),
-        darwin: getEdgeDarwin("/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev"),
-        win32: getEdgeExe("Edge Dev"),
-    };
+export function getEdgeDevPath() {
+    let edgeDev = edgePaths.dev;
     if (platform && platform in edgeDev) {
-        return edgeDev[platform];
+        let pth = edgeDev[platform]();
+        if (pth) {
+            return pth;
+        }
     }
-    throwInvalidPlatformError();
+    throwInvalidPlatformError("Edge Dev", edgePaths);
 }
-exports.getEdgeDevPath = getEdgeDevPath;
-function getEdgeBetaPath() {
-    let edgeBeta = {
-        darwin: getEdgeDarwin("/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta"),
-        win32: getEdgeExe("Edge Beta"),
-    };
+export function getEdgeBetaPath() {
+    let edgeBeta = edgePaths.beta;
     if (platform && platform in edgeBeta) {
-        return edgeBeta[platform];
+        let pth = edgeBeta[platform]();
+        if (pth) {
+            return pth;
+        }
     }
-    throwInvalidPlatformError();
+    throwInvalidPlatformError("Edge Beta", edgePaths);
 }
-exports.getEdgeBetaPath = getEdgeBetaPath;
-function getEdgeCanaryPath() {
-    let edgeCanary = {
-        darwin: getEdgeDarwin("/Applications/Microsoft Edge Canary.app/Contents/MacOS/Microsoft Edge Canary"),
-        win32: getEdgeExe("Edge SxS"),
-    };
+export function getEdgeCanaryPath() {
+    let edgeCanary = edgePaths.canary;
     if (platform && platform in edgeCanary) {
-        return edgeCanary[platform];
+        let pth = edgeCanary[platform]();
+        if (pth) {
+            return pth;
+        }
     }
-    throwInvalidPlatformError();
+    throwInvalidPlatformError("Edge Canary", edgePaths);
 }
-exports.getEdgeCanaryPath = getEdgeCanaryPath;
-function getAnyEdgeLatest() {
+export function getAnyEdgeLatest() {
     try {
         return getEdgeCanaryPath();
-    }
-    catch (e) { }
-    try {
-        return getEdgeDevPath();
-    }
-    catch (e) { }
-    try {
-        return getEdgeBetaPath();
-    }
-    catch (e) { }
-    try {
-        return getEdgeDevPath();
-    }
-    catch (e) { }
-    throw {
-        package: "edge-paths",
-        message: `Unable to find any path`,
-    };
-}
-exports.getAnyEdgeLatest = getAnyEdgeLatest;
-function getAnyEdgeStable() {
-    try {
     }
     catch (e) {
-        return getEdgePath();
+        throwIfNotEdgePathIssue(e);
+    }
+    try {
+        return getEdgeDevPath();
+    }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
     }
     try {
         return getEdgeBetaPath();
     }
-    catch (e) { }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
+    }
     try {
         return getEdgeDevPath();
     }
-    catch (e) { }
-    try {
-        return getEdgeCanaryPath();
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
     }
-    catch (e) { }
     throw {
-        package: "edge-paths",
+        name: "edge-paths",
         message: `Unable to find any path`,
     };
 }
-exports.getAnyEdgeStable = getAnyEdgeStable;
-function throwInvalidPlatformError() {
+export function getAnyEdgeStable() {
+    try {
+        return getEdgePath();
+    }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
+    }
+    try {
+        return getEdgeBetaPath();
+    }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
+    }
+    try {
+        return getEdgeDevPath();
+    }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
+    }
+    try {
+        return getEdgeCanaryPath();
+    }
+    catch (e) {
+        throwIfNotEdgePathIssue(e);
+    }
     throw {
-        package: "edge-paths",
-        message: "Your platform is not supported. Only mac and windows are supported currently",
+        name: "edge-paths",
+        message: `Unable to find any path`,
     };
 }
-if (require.main === module) {
-    function findEdge(func) {
-        try {
-            let path = func();
-            console.log("Found path", path);
-        }
-        catch (e) {
-            console.log("Error on finding path", e);
-        }
+function throwInvalidPlatformError(additionalInfo = "", otherDetails) {
+    throw {
+        name: "edge-paths",
+        message: `Couldn't find the edge browser. ${additionalInfo}`,
+        otherDetails,
+    };
+}
+function throwIfNotEdgePathIssue(obj) {
+    if (Object.prototype.toString.call(obj) === "[object Object]" &&
+        obj &&
+        obj.name &&
+        obj.name === "edge-paths") {
+        return true;
     }
-    findEdge(() => getEdgeBetaPath());
-    findEdge(() => getEdgeCanaryPath());
-    findEdge(() => getEdgeDevPath());
-    findEdge(() => getEdgePath());
+    throw obj;
 }
