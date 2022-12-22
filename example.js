@@ -5,7 +5,7 @@ import {
 	getEdgePath,
 	getAnyEdgeStable,
 	getAnyEdgeLatest,
-} from ('./dist/main.js')
+} from "./dist/index.js"
 // don't forget to replace above with following line
 // let { getEdgeBetaPath, getEdgeCanaryPath, getEdgeDevPath, getEdgePath } from 'edge-paths'
 

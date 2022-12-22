@@ -4,8 +4,7 @@ import which from "which"
 
 let platform = process.platform
 
-// Assumes platform is linux so caller
-// must maintain this invariant.
+// Caller will ensure that the platform is linux, otherwise null will be returned
 function getEdgeLinux(
 	name:
 		| "microsoft-edge-dev"
@@ -20,8 +19,8 @@ function getEdgeLinux(
 	return null
 }
 
-// Assumes Window so caller must maintain
-// this invaraint
+
+// Caller will ensure that the platform is windows, otherwise null will be returned
 function getEdgeWindows(
 	edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS",
 ): string | null {
@@ -44,7 +43,7 @@ function getEdgeWindows(
 	return null
 }
 
-// Caller must ensure the platform is darwin
+// Caller will ensure that the platform is macos, otherwise null will be returned
 function getEdgeDarwin(defaultPath: string): string | null {
 	if (existsSync(defaultPath)) {
 		return defaultPath
@@ -88,7 +87,7 @@ const edgePaths = {
 	},
 }
 
-// Best way to get edge path in cross platform way
+// returns edge path
 export function getEdgePath(): string {
 	let edge = edgePaths.edge
 
@@ -101,7 +100,7 @@ export function getEdgePath(): string {
 	throwInvalidPlatformError("Edge Stable", edgePaths)
 }
 
-// Best way to get edge developer version path.
+// Returns edge dev path
 export function getEdgeDevPath(): string {
 	let edgeDev = edgePaths.dev
 
@@ -114,7 +113,7 @@ export function getEdgeDevPath(): string {
 	throwInvalidPlatformError("Edge Dev", edgePaths)
 }
 
-// Best way to get edge beta path
+// Returns edge beta path if it is available
 export function getEdgeBetaPath(): string {
 	let edgeBeta = edgePaths.beta
 
@@ -127,6 +126,7 @@ export function getEdgeBetaPath(): string {
 	throwInvalidPlatformError("Edge Beta", edgePaths)
 }
 
+// Returns edge canary paths.
 export function getEdgeCanaryPath(): string {
 	let edgeCanary = edgePaths.canary
 
@@ -205,7 +205,6 @@ export function getAnyEdgeStable(): string {
 }
 
 // Helpers
-
 function throwInvalidPlatformError(
 	additionalInfo: string = "",
 	otherDetails?: any,
@@ -213,6 +212,7 @@ function throwInvalidPlatformError(
 	throw {
 		name: "edge-paths",
 		message: `Couldn't find the edge browser. ${additionalInfo}`,
+		additionalInfo,
 		otherDetails,
 	}
 }
