@@ -3,13 +3,12 @@ import {
 	getEdgeCanaryPath,
 	getEdgeDevPath,
 	getEdgePath,
-} from "../dist/main.js"
+} from "../dist/index.js"
 import { execFile } from "child_process"
 import { promisify } from "util"
 
 // Todo when canary beta are released remove ignoredOnLinux
 // variable.  And don't forget to update src/main.ts
-
 console.log("Testing Edge Browser")
 async function check(binaryPathFunc, shouldBe) {
 	let ignoreOnLinux = ["canary"]
