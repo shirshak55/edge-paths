@@ -2,8 +2,8 @@
 	"name": "edge-paths",
 	"version": "3.0.0",
 	"description": "Get the paths of edge browser easily",
-	"main": "dist/main.js",
-	"typings": "dist/main.d.ts",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
 	"repository": "shirshak55/edge-paths",
 	"funding": "https://github.com/sponsors/shirshak55",
 	"author": "shirshak",
@@ -11,8 +11,8 @@
 	"private": false,
 	"type": "module",
 	"files": [
-		"dist/main.js",
-		"dist/main.d.ts"
+		"dist/index.js",
+		"dist/index.d.ts"
 	],
 	"keywords": [
 		"browser",

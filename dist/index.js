@@ -158,6 +158,7 @@ function throwInvalidPlatformError(additionalInfo = "", otherDetails) {
     throw {
         name: "edge-paths",
         message: `Couldn't find the edge browser. ${additionalInfo}`,
+        additionalInfo,
         otherDetails,
     };
 }

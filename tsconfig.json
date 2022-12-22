@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ES2015",
+    "module": "ES2015",
     "lib": ["esnext"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports":true,
     "declaration": true,
@@ -12,5 +12,5 @@
     "strict": true    
   },
   "exclude": ["node_modules"],
-  "files": ["./src/main.ts"]
+  "files": ["./index.ts"]
 }
