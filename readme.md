@@ -23,14 +23,14 @@ Possible paths or binary names of [Edge](https://www.microsoft.com/en-us/edge) i
 ###### Javascript
 
 ```javascript
-let {
+import {
 	getEdgeBetaPath,
 	getEdgeCanaryPath,
 	getEdgeDevPath,
 	getEdgePath,
 	getAnyEdgeStable,
 	getAnyEdgeLatest,
-} = require("edge-paths")
+} from "./dist/index.js"
 
 console.log(getEdgeBetaPath())
 console.log(getEdgeCanaryPath())
@@ -93,14 +93,14 @@ $ yarn add edge-paths
 ## API
 
 ```javascript
-let {
+import {
 	getEdgeBetaPath,
 	getEdgeCanaryPath,
 	getEdgeDevPath,
 	getEdgePath,
 	getAnyEdgeStable,
 	getAnyEdgeLatest,
-} = require("edge-paths")
+}  from "./dist/index.js"
 ```
 
 -   `getAnyEdgeStable` or `getAnyEdgeLatest` might be more useful if you don't want any specific version.
