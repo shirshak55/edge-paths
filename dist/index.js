@@ -114,7 +114,7 @@ export function getAnyEdgeLatest() {
         throwIfNotEdgePathIssue(e);
     }
     try {
-        return getEdgeDevPath();
+        return getEdgePath();
     }
     catch (e) {
         throwIfNotEdgePathIssue(e);

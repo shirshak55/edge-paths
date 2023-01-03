@@ -160,7 +160,7 @@ export function getAnyEdgeLatest(): string {
 	}
 
 	try {
-		return getEdgeDevPath()
+		return getEdgePath()
 	} catch (e) {
 		throwIfNotEdgePathIssue(e)
 	}
