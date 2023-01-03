@@ -222,7 +222,7 @@ function throwIfNotEdgePathIssue(obj: any) {
 		Object.prototype.toString.call(obj) === "[object Object]" &&
 		obj &&
 		obj.name &&
-		obj.name === "edge-paths"
+		obj.name !== "edge-paths"
 	) {
 		return true
 	}
