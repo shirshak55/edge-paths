@@ -30,7 +30,7 @@
 		"build": "tsc",
 		"test": "node tests/index.js"
 	},
-	"exports": "./dist/main.js",
+	"exports": "./dist/index.js",
 	"devDependencies": {
 		"@types/node": "^16.11.9",
 		"got": "^11.8.3",
