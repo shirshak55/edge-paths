@@ -167,7 +167,7 @@ export function getAnyEdgeLatest(): string {
 
 	throw {
 		name: "edge-paths",
-		message: `Unable to find any path`,
+		message: `Unable to find any ms-edge-browser`,
 	}
 }
 
@@ -200,7 +200,7 @@ export function getAnyEdgeStable(): string {
 
 	throw {
 		name: "edge-paths",
-		message: `Unable to find any path`,
+		message: `Unable to find any ms-edge-browser.`,
 	}
 }
 
@@ -222,9 +222,9 @@ function throwIfNotEdgePathIssue(obj: any) {
 		Object.prototype.toString.call(obj) === "[object Object]" &&
 		obj &&
 		obj.name &&
-		obj.name !== "edge-paths"
+		obj.name === "edge-paths"
 	) {
-		return true
+		return
 	}
 
 	throw obj

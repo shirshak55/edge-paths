@@ -121,7 +121,7 @@ export function getAnyEdgeLatest() {
     }
     throw {
         name: "edge-paths",
-        message: `Unable to find any path`,
+        message: `Unable to find any ms-edge-browser`,
     };
 }
 export function getAnyEdgeStable() {
@@ -151,7 +151,7 @@ export function getAnyEdgeStable() {
     }
     throw {
         name: "edge-paths",
-        message: `Unable to find any path`,
+        message: `Unable to find any ms-edge-browser.`,
     };
 }
 function throwInvalidPlatformError(additionalInfo = "", otherDetails) {
@@ -166,8 +166,8 @@ function throwIfNotEdgePathIssue(obj) {
     if (Object.prototype.toString.call(obj) === "[object Object]" &&
         obj &&
         obj.name &&
-        obj.name !== "edge-paths") {
-        return true;
+        obj.name === "edge-paths") {
+        return;
     }
     throw obj;
 }
