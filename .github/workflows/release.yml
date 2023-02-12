@@ -1,0 +1,29 @@
+name: Release
+on:
+  repository_dispatch:
+    types: [semantic-release]
+  workflow_run:
+    workflows: [Test Edge Paths]
+    branches: [master, beta, alpha]
+    types: 
+      - completed
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_URL: "https://api.github.com/"
+        run: npx --legacy-peer-deps -p @semantic-release/changelog -p @semantic-release/git -p semantic-release semantic-release
