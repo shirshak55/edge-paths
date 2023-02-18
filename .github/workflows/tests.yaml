@@ -1,9 +1,6 @@
 name: Test Edge Paths
 
-on:
-    push:
-    schedule:
-        - cron: "00 12 * * *"
+on: [push, pull_request]
 
 jobs:
     build-ununtu:
@@ -14,7 +11,6 @@ jobs:
                     - ubuntu-latest
                     - ubuntu-18.04
                 node_version:
-                    - 12
                     - 14
                     - 16
                     - 17
@@ -39,10 +35,9 @@ jobs:
         strategy:
             matrix:
                 os:
-                    - macos-10.15
+                    - macos-latest
                     - macos-11
                 node_version:
-                    - 12
                     - 14
                     - 16
                     - 17
@@ -56,7 +51,11 @@ jobs:
                   architecture: ${{ matrix.architecture }}
             - run: npm install
             - run: node tests/downloadEdge.js
-            - run: for f in *.pkg;do echo $f; sudo installer -allowUntrusted -pkg $f -target /; done
+            - run: sudo su
+            - run: sudo installer -allowUntrusted -pkg MicrosoftEdge-*.pkg -target /
+            - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeBeta-*.pkg -target /
+            - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeCanary-*.pkg -target /
+            - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeDev-*.pkg -target /
             - run: ls
             - run: node tests/index.js
 
@@ -68,7 +67,6 @@ jobs:
                     - windows-latest
                     - windows-2022
                 node_version:
-                    - 12
                     - 14
                     - 16
                     - 17
