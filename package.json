@@ -28,13 +28,24 @@
 	"scripts": {
 		"watch": "tsc --watch",
 		"build": "tsc",
+		"prepare":"husky install",
 		"test": "node tests/index.js"
 	},
 	"exports": "./dist/index.js",
 	"devDependencies": {
+		"@commitlint/cli": "^17.4.2",
+		"@commitlint/config-conventional": "^17.4.2",
+		"@commitlint/cz-commitlint": "^17.4.2",
 		"@types/node": "^16.11.9",
-		"got": "^11.8.3",
+		"commitizen": "^4.3.0",
+		"got": "^11.8.6",
+		"husky": "^8.0.3",
 		"typescript": "^4.5.2"
+	},
+	"config": {
+		"commitizen": {
+			"path": "@commitlint/cz-commitlint"
+		}
 	},
 	"dependencies": {
 		"@types/which": "^2.0.1",
