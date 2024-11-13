@@ -3,7 +3,12 @@ import path from "node:path"
 import which from "which"
 import process, { platform } from 'node:process'
 
-// Caller will ensure that the platform is linux, otherwise null will be returned
+/**
+ * Caller will ensure that the platform is windows, otherwise null will be returned. 
+ * This is internal function and isn't exported to public.
+ * @param edgeDirName 
+ * @returns edge paths for windows platform
+ */
 function getEdgeLinux(
 	name:
 		| "microsoft-edge-dev"
@@ -19,7 +24,11 @@ function getEdgeLinux(
 }
 
 
-// Caller will ensure that the platform is windows, otherwise null will be returned
+/**
+ * Caller will ensure that the platform is windows, otherwise null will be returned
+ * @param edgeDirName 
+ * @returns edge paths for windows platform
+ */
 function getEdgeWindows(
 	edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS",
 ): string | null {
@@ -42,7 +51,11 @@ function getEdgeWindows(
 	return null
 }
 
-// Caller will ensure that the platform is macos, otherwise null will be returned
+/**
+ * Caller will ensure that the platform is macos, otherwise null will be returned
+ * @param defaultPath is the default path of edge browser.
+ * @returns gives null if executable isn't available in given path.
+ */
 function getEdgeDarwin(defaultPath: string): string | null {
 	if (existsSync(defaultPath)) {
 		return defaultPath
@@ -51,6 +64,9 @@ function getEdgeDarwin(defaultPath: string): string | null {
 	return null
 }
 
+/**
+ * Mother object of edge paths package.
+ */
 const edgePaths = {
 	edge: {
 		linux: () => getEdgeLinux("microsoft-edge-stable"),
@@ -86,7 +102,10 @@ const edgePaths = {
 	},
 }
 
-// returns edge path
+/**
+ * Gives executable path for edge stable browser
+ * @returns Gets edge stable browser path.
+ */
 export function getEdgePath(): string {
 	const edge = edgePaths.edge
 
@@ -99,7 +118,10 @@ export function getEdgePath(): string {
 	throwInvalidPlatformError("Edge Stable", edgePaths)
 }
 
-// Returns edge dev path
+/**
+ * Gives executable path for edge dev.
+ * @returns Gets edge dev path.
+ */
 export function getEdgeDevPath(): string {
 	let edgeDev = edgePaths.dev
 
@@ -112,7 +134,10 @@ export function getEdgeDevPath(): string {
 	throwInvalidPlatformError("Edge Dev", edgePaths)
 }
 
-// Returns edge beta path if it is available
+/**
+ * Gives executable path for edge beta.
+ * @returns Gets edge beta path.
+ */
 export function getEdgeBetaPath(): string {
 	const edgeBeta = edgePaths.beta
 
@@ -125,7 +150,11 @@ export function getEdgeBetaPath(): string {
 	throwInvalidPlatformError("Edge Beta", edgePaths)
 }
 
-// Returns edge canary paths.
+/**
+ * Gives path of canary edge browser
+ * @returns paths of canary edge
+ * @throws it throws error if it can't find edge canary.
+ */
 export function getEdgeCanaryPath(): string {
 	const edgeCanary = edgePaths.canary
 
@@ -138,7 +167,11 @@ export function getEdgeCanaryPath(): string {
 	throwInvalidPlatformError("Edge Canary", edgePaths)
 }
 
-// This will try to get any edge from bleeding edge to most stable version
+/**
+ * This function will try to find edge browser in order: canary, dev, beta and stable.
+ * @returns browser path from most bleeding edge to stable
+ * @throws if edge paths isn't found, it throws error with name: "edge-paths"
+ */
 export function getAnyEdgeLatest(): string {
 	try {
 		return getEdgeCanaryPath()
@@ -172,6 +205,10 @@ export function getAnyEdgeLatest(): string {
 
 // This will try to get edge from stable version to bleeding version
 // Useful for playwright, puppeteer related stuff
+/**
+ * It tries to find edge stable and if it can't it goes to beta and so on.
+ * @returns any browser path and searches from stable to bleeding edge.
+ */
 export function getAnyEdgeStable(): string {
 	try {
 		return getEdgePath()
@@ -203,7 +240,11 @@ export function getAnyEdgeStable(): string {
 	}
 }
 
-// Helpers
+/**
+ * If we can't find edge browser we give this error.
+ * @param additionalInfo additional information that caused this error
+ * @param otherDetails if there are other details, we give it to user so they can investigate it.
+ */
 function throwInvalidPlatformError(
 	additionalInfo: string = "",
 	otherDetails?: any,
@@ -216,6 +257,11 @@ function throwInvalidPlatformError(
 	}
 }
 
+/**
+ *  If we encounter issues that we don't know this will simply throw the error.
+ * @param obj 
+ * @returns 
+ */
 function throwIfNotEdgePathIssue(obj: any) {
 	if (
 		Object.prototype.toString.call(obj) === "[object Object]" &&
