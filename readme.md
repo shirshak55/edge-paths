@@ -88,6 +88,16 @@ $ npm install edge-paths
 // or
 
 $ yarn add edge-paths
+
+// or
+
+$ pnpm add edge-paths
+```
+
+
+If you use deno you can use following command:
+```bash
+deno add jsr:@browser/edge-paths
 ```
 
 ## API
