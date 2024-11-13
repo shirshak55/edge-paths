@@ -1,8 +1,7 @@
-import { existsSync } from "fs"
-import path from "path"
+import { existsSync } from "node:fs"
+import path from "node:path"
 import which from "which"
-
-let platform = process.platform
+import process, { platform } from 'node:process'
 
 // Caller will ensure that the platform is linux, otherwise null will be returned
 function getEdgeLinux(
@@ -12,7 +11,7 @@ function getEdgeLinux(
 		| "microsoft-edge-stable",
 ): string | null {
 	try {
-		let path = which.sync(name)
+		const path = which.sync(name)
 		return path
 	} catch (e) {}
 
@@ -24,9 +23,9 @@ function getEdgeLinux(
 function getEdgeWindows(
 	edgeDirName: "Edge" | "Edge Dev" | "Edge Beta" | "Edge SxS",
 ): string | null {
-	let paths = []
-	let suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
-	let prefixes = [
+	const paths = []
+	const suffix = `\\Microsoft\\${edgeDirName}\\Application\\msedge.exe`
+	const prefixes = [
 		process.env.LOCALAPPDATA,
 		process.env.PROGRAMFILES,
 		process.env["PROGRAMFILES(X86)"],
@@ -89,10 +88,10 @@ const edgePaths = {
 
 // returns edge path
 export function getEdgePath(): string {
-	let edge = edgePaths.edge
+	const edge = edgePaths.edge
 
 	if (platform && platform in edgePaths.edge) {
-		let pth = edge[platform as keyof typeof edge]()
+		const pth = edge[platform as keyof typeof edge]()
 		if (pth) {
 			return pth
 		}
@@ -115,10 +114,10 @@ export function getEdgeDevPath(): string {
 
 // Returns edge beta path if it is available
 export function getEdgeBetaPath(): string {
-	let edgeBeta = edgePaths.beta
+	const edgeBeta = edgePaths.beta
 
 	if (platform && platform in edgeBeta) {
-		let pth = edgeBeta[platform as keyof typeof edgeBeta]()
+		const pth = edgeBeta[platform as keyof typeof edgeBeta]()
 		if (pth) {
 			return pth
 		}
@@ -128,10 +127,10 @@ export function getEdgeBetaPath(): string {
 
 // Returns edge canary paths.
 export function getEdgeCanaryPath(): string {
-	let edgeCanary = edgePaths.canary
+	const edgeCanary = edgePaths.canary
 
 	if (platform && platform in edgeCanary) {
-		let pth = edgeCanary[platform as keyof typeof edgeCanary]()
+		const pth = edgeCanary[platform as keyof typeof edgeCanary]()
 		if (pth) {
 			return pth
 		}
