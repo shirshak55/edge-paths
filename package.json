@@ -28,7 +28,7 @@
 	"scripts": {
 		"watch": "tsc --watch",
 		"build": "tsc",
-		"prepare":"husky install",
+		"prepare": "husky install",
 		"test": "node tests/index.js"
 	},
 	"exports": "./dist/index.js",

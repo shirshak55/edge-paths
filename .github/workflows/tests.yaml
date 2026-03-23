@@ -9,18 +9,18 @@ jobs:
             matrix:
                 os:
                     - ubuntu-latest
-                    - ubuntu-18.04
+                    - ubuntu-24.04
                 node_version:
-                    - 14
-                    - 16
-                    - 17
+                    - 22
+                    - 24
+                    - 25
                 architecture:
                     - x64
         name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - name: Setup node
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node_version }}
                   architecture: ${{ matrix.architecture }}
@@ -36,19 +36,18 @@ jobs:
             matrix:
                 os:
                     - macos-latest
-                    - macos-11
+                    - macos-15
                 node_version:
-                    - 14
-                    - 16
-                    - 17
-        name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+                    - 22
+                    - 24
+                    - 25
+        name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - name: Setup node
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node_version }}
-                  architecture: ${{ matrix.architecture }}
             - run: npm install
             - run: node tests/downloadEdge.js
             - run: sudo su
@@ -65,19 +64,18 @@ jobs:
             matrix:
                 os:
                     - windows-latest
-                    - windows-2022
+                    - windows-2025
                 node_version:
-                    - 14
-                    - 16
-                    - 17
-        name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+                    - 22
+                    - 24
+                    - 25
+        name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - name: Setup node
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node_version }}
-                  architecture: ${{ matrix.architecture }}
             - uses: browser-actions/setup-edge@latest
               with:
                   edge-version: stable
