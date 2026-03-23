@@ -3,7 +3,7 @@ name: Test Edge Paths
 on: [push, pull_request]
 
 jobs:
-    build-ununtu:
+    build-ubuntu:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -28,8 +28,7 @@ jobs:
                   architecture: ${{ matrix.architecture }}
             - run: npm install
             - run: node tests/downloadEdge.js
-            - run: for f in *.deb;do echo $f;sudo apt install -y  ./$f; done
-            - run: ls
+            - run: for f in *.deb;do echo $f;sudo apt install -y ./$f; done
             - run: node tests/index.js
 
     build-macos:
@@ -54,15 +53,13 @@ jobs:
                   node-version: ${{ matrix.node_version }}
             - run: npm install
             - run: node tests/downloadEdge.js
-            - run: sudo su
             - run: sudo installer -allowUntrusted -pkg MicrosoftEdge-*.pkg -target /
             - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeBeta-*.pkg -target /
             - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeCanary-*.pkg -target /
             - run: sudo installer -allowUntrusted -pkg MicrosoftEdgeDev-*.pkg -target /
-            - run: ls
             - run: node tests/index.js
 
-    build-window:
+    build-windows:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
@@ -82,17 +79,13 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node_version }}
-            - uses: browser-actions/setup-edge@latest
-              with:
-                  edge-version: stable
-            - uses: browser-actions/setup-edge@latest
-              with:
-                  edge-version: beta
-            - uses: browser-actions/setup-edge@latest
-              with:
-                  edge-version: canary
-            - uses: browser-actions/setup-edge@latest
-              with:
-                  edge-version: dev
             - run: npm install
+            - run: node tests/downloadEdge.js
+            - name: Install Edge channels
+              shell: pwsh
+              run: |
+                  Get-ChildItem edge-*.exe | ForEach-Object {
+                      Write-Host "Installing $_"
+                      Start-Process -FilePath $_.FullName -ArgumentList '/silent', '/install' -Wait
+                  }
             - run: node tests/index.js

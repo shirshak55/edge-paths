@@ -33,14 +33,14 @@
 	},
 	"exports": "./dist/index.js",
 	"devDependencies": {
-		"@commitlint/cli": "^17.8.1",
-		"@commitlint/config-conventional": "^17.8.1",
-		"@commitlint/cz-commitlint": "^17.8.1",
-		"@types/node": "^16.18.126",
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
+		"@commitlint/cz-commitlint": "^20.5.0",
+		"@types/node": "^25.5.0",
 		"commitizen": "^4.3.1",
-		"got": "^11.8.6",
-		"husky": "^8.0.3",
-		"typescript": "^4.9.5"
+		"got": "^14.6.6",
+		"husky": "^9.1.7",
+		"typescript": "^5.9.3"
 	},
 	"config": {
 		"commitizen": {
