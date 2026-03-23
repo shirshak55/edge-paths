@@ -1,10 +1,9 @@
 import { existsSync } from "node:fs"
+import { execSync } from "node:child_process"
 import path from "node:path"
-import which from "which"
 
 let platform = process.platform
 
-// Caller will ensure that the platform is linux, otherwise null will be returned
 function getEdgeLinux(
 	name:
 		| "microsoft-edge-dev"
@@ -12,8 +11,7 @@ function getEdgeLinux(
 		| "microsoft-edge-stable",
 ): string | null {
 	try {
-		let path = which.sync(name)
-		return path
+		return execSync(`command -v ${name}`, { encoding: "utf8", stdio: ["pipe", "pipe", "ignore"] }).trim()
 	} catch (e) {}
 
 	return null
