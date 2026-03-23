@@ -1,7 +1,0 @@
-{
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "knisterpeter.vscode-commitizen",
-    "vivaxy.vscode-conventional-commits"
-  ]
-}

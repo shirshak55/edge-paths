@@ -1,11 +1,10 @@
 import { existsSync } from "node:fs";
+import { execSync } from "node:child_process";
 import path from "node:path";
-import which from "which";
 let platform = process.platform;
 function getEdgeLinux(name) {
     try {
-        let path = which.sync(name);
-        return path;
+        return execSync(`command -v ${name}`, { encoding: "utf8", stdio: ["pipe", "pipe", "ignore"] }).trim();
     }
     catch (e) { }
     return null;

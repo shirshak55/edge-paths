@@ -5,7 +5,7 @@ import {
 	getEdgePath,
 	getAnyEdgeStable,
 	getAnyEdgeLatest,
-} from "./dist/index.js"
+} from "../dist/index.js"
 
 console.log(getAnyEdgeStable())
 console.log(getEdgeBetaPath())

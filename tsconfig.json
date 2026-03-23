@@ -4,7 +4,7 @@
     "module": "ES2015",
     "lib": ["esnext"],
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports":true,
     "declaration": true,
@@ -12,5 +12,5 @@
     "strict": true    
   },
   "exclude": ["node_modules"],
-  "files": ["./index.ts"]
+  "files": ["./src/index.ts"]
 }
